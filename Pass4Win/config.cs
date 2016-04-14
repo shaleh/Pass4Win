@@ -32,6 +32,7 @@ namespace Pass4Win
                 try {
                     txtPassFolder.Text = _config["PassDirectory"];
                     txtGPG.Text = _config["GPGEXE"];
+                    txtPassValidTime.Text = _config["PassValidTime"];
                     chkboxRemoteRepo.Checked = _config["UseGitRemote"];
                     txtGitUser.Text = _config["GitUser"];
                     txtGitPass.Text = _config["GitPass"];
@@ -55,6 +56,7 @@ namespace Pass4Win
             } else
             {
                 _config.ResetConfig();
+                _config["PassValidTime"] = "45"
                 _config["UseGitRemote"] = false;
                 _config["GitUser"] = "";
                 _config["GitPass"] = "";
@@ -168,6 +170,16 @@ namespace Pass4Win
         }
 
         /// <summary>
+        /// Save Password Valid Time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TxtPassValidTimeLeave(object sender, EventArgs e)
+        {
+            _config["PassValidTime"] = FrmMain.PassValidTimeConfig(txtPassValidTime.Text, "45");
+        }
+
+        /// <summary>
         /// Save git host data
         /// </summary>
         /// <param name="sender"></param>
@@ -203,6 +215,22 @@ namespace Pass4Win
                 errorProvider1.SetError(txtGPG, Strings.Error_required_field);
                 if (this.valCancel) e.Cancel = true;
             }
+        }
+
+        /// <summary>
+        /// Validates Pass Valid Time value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TxtPassValidTimeValidating(object sender, CancelEventArgs e)
+        {
+            if (txtPassValidTime.Text == "")
+            {
+                errorProvider1.SetError(txtPassValidTime, Strings.Error_required_field);
+                if (this.valCancel) e.Cancel = true;
+            }
+            // elif the value is not a valid num
+            // elif the value is outside of bounds
         }
 
         /// <summary>
